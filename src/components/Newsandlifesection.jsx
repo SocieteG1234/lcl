@@ -143,7 +143,7 @@ export default function NewsAndLifeSection({ onNavigateToLogin, onNavigateToInsc
             />
             <div className="p-5">
               <h3 className="font-bold text-base sm:text-lg mb-2 leading-tight" style={{ color: LCL_BLUE }}>
-                Ensemble, protégeons nous face aux fraudes bancaires
+                Ensemble, protégeons nous face aux fraudes bancaires.
               </h3>
               <p className="text-gray-600 text-sm leading-relaxed mb-3">
                 Les techniques de fraude évoluent avec le temps. C'est en restant vigilants ensemble que nous pourrons nous protéger...
