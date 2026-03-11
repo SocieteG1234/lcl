@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Bell, BellOff, ChevronRight, TrendingUp, Shield, Gift, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import BottomNavigation from './BottomNavigation';
+import BottomNavigation from './Bottomnavigation';
 
 const LCL_BLUE   = '#1a237e';
 const LCL_YELLOW = '#f5c518';
@@ -117,11 +117,6 @@ const AlertesSection = () => {
         ))}
       </div>
 
-      {/* Texte bas */}
-      <div className="text-center mt-auto pt-16 pb-6 px-6">
-        <p className="text-xl font-bold text-white opacity-0">Paramétrez</p>
-      </div>
-
       <BottomNavigation />
     </div>
   );
@@ -203,7 +198,6 @@ const ActusPage = () => {
             })}
           </div>
 
-          {/* Texte bas page actus */}
           <div
             className="text-center mt-8 py-6 px-6 mx-4 rounded-2xl"
             style={{ backgroundColor: LCL_BLUE }}

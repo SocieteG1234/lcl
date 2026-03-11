@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronLeft, Phone, Mail, MessageCircle, Calendar, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import BottomNavigation from './BottomNavigation';
+import BottomNavigation from './Bottomnavigation';
 
 const LCL_BLUE   = '#1a237e';
 const LCL_YELLOW = '#f5c518';
