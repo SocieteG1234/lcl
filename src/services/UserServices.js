@@ -7,7 +7,7 @@ const DEV_MODE = true;
 
 const STORAGE_KEY   = 'lcl_users_data';
 const VERSION_KEY   = 'lcl_data_version';
-const DATA_VERSION  = 4; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
+const DATA_VERSION  = 5; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
 
 // ============================================
 // DONNÉES DE BASE DES UTILISATEURS
