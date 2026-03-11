@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, ArrowUpRight, Calendar, Users, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import BottomNavigation from './BottomNavigation';
+import BottomNavigation from './Bottomnavigation';
 import VirementRapide from './VirementRapide';
 import VirementProgramme from './VirementProgramme';
 import AjouterBeneficiaire from './AjouterBeneficiaire';
@@ -50,7 +50,7 @@ export default function VirementPage() {
           </div>
         </div>
 
-        {/* Onglets — désactivés si compte bloqué */}
+        {/* Onglets */}
         <div className="flex border-t border-gray-100">
           {TABS.map(tab => {
             const Icon     = tab.icon;
@@ -79,7 +79,7 @@ export default function VirementPage() {
         </div>
       </div>
 
-      {/* ── Compte bloqué — message de blocage ────────────────── */}
+      {/* Compte bloqué */}
       {user?.isBlocked ? (
         <div className="px-4 pt-10 flex flex-col items-center text-center gap-5">
           <div
@@ -88,35 +88,26 @@ export default function VirementPage() {
           >
             <Lock className="w-12 h-12 text-white" />
           </div>
-
           <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">
-              Virements indisponibles
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Virements indisponibles</h2>
             <p className="text-gray-500 text-sm max-w-xs">
               Votre compte est actuellement bloqué. Les virements sont suspendus jusqu'au déblocage de votre compte.
             </p>
           </div>
-
           {user?.blockReason && (
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 w-full max-w-xs">
               <p className="text-xs text-amber-700 font-medium mb-1">Motif du blocage</p>
               <p className="text-sm text-amber-900">{user.blockReason}</p>
             </div>
           )}
-
           {user?.unlockFee > 0 && (
-            <div
-              className="rounded-2xl p-4 w-full max-w-xs text-white"
-              style={{ background: LCL_BLUE }}
-            >
+            <div className="rounded-2xl p-4 w-full max-w-xs text-white" style={{ background: LCL_BLUE }}>
               <p className="text-xs opacity-70 mb-1">Frais de déblocage</p>
               <p className="text-2xl font-bold">
                 {user.unlockFee.toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €
               </p>
             </div>
           )}
-
           <button
             onClick={() => navigate('/dashboard')}
             className="px-8 py-3 rounded-full font-semibold text-sm transition hover:opacity-90"
@@ -125,9 +116,7 @@ export default function VirementPage() {
             Retour au tableau de bord
           </button>
         </div>
-
       ) : (
-        /* ── Compte actif — contenu normal ───────────────────── */
         <div className="px-4 pt-5">
           {activeTab === 'rapide'       && <VirementRapide      />}
           {activeTab === 'programme'    && <VirementProgramme   />}
