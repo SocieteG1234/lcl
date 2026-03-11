@@ -9,7 +9,7 @@ import NewsAndLifeSection from './components/NewsAndLifeSection';
 import { AppSection, Footer } from './components/AppSectionAndFooter';
 
 // ── Pages auth ────────────────────────────────────────────────────
-import LoginPage      from './components/LoginPage';
+import LoginPage       from './components/LoginPage';
 import InscriptionPage from './components/InscriptionPage';
 
 // ── Pages authentifiées ───────────────────────────────────────────
@@ -23,13 +23,14 @@ import CartesPage          from './components/CartesPage';
 import RIBPage             from './components/RIBPage';
 import RecuPage            from './components/RecuPage';
 import Chequier            from './components/Chequier';
+import ConseillerPage      from './components/ConseillerPage';
+import ActusPage           from './components/ActusPage';
 
 // ─────────────────────────────────────────────────────────────────
 
 // 🔒 Route protégée
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
-
   if (loading) return <LoadingScreen />;
   return user ? children : <Navigate to="/login" replace />;
 }
@@ -105,7 +106,7 @@ function RecuPageWrapper({ virementData }) {
 // ─────────────────────────────────────────────────────────────────
 
 function AppRoutes() {
-  const { loading }                   = useAuth();
+  const { loading }                     = useAuth();
   const [virementData, setVirementData] = useState(null);
 
   if (loading) return <LoadingScreen />;
@@ -113,21 +114,23 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public */}
-      <Route path="/"           element={<HomePage />} />
-      <Route path="/login"      element={<LoginPageWrapper />} />
-      <Route path="/inscription" element={<InscriptionPageWrapper />} />
+      <Route path="/"            element={<HomePage />} />
+      <Route path="/login"       element={<LoginPageWrapper />} />
+      <Route path="/inscription"  element={<InscriptionPageWrapper />} />
 
-      {/* Protégées — chaque composant utilise useNavigate() en interne */}
-      <Route path="/dashboard"           element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-      <Route path="/historique"          element={<PrivateRoute><HistoriquePage /></PrivateRoute>} />
-      <Route path="/virement"            element={<PrivateRoute><VirementPageWrapper setVirementData={setVirementData} /></PrivateRoute>} />
-      <Route path="/virement-rapide"     element={<PrivateRoute><VirementRapide /></PrivateRoute>} />
-      <Route path="/virement-programme"  element={<PrivateRoute><VirementProgramme /></PrivateRoute>} />
+      {/* Protégées */}
+      <Route path="/dashboard"            element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+      <Route path="/historique"           element={<PrivateRoute><HistoriquePage /></PrivateRoute>} />
+      <Route path="/virement"             element={<PrivateRoute><VirementPageWrapper setVirementData={setVirementData} /></PrivateRoute>} />
+      <Route path="/virement-rapide"      element={<PrivateRoute><VirementRapide /></PrivateRoute>} />
+      <Route path="/virement-programme"   element={<PrivateRoute><VirementProgramme /></PrivateRoute>} />
       <Route path="/ajouter-beneficiaire" element={<PrivateRoute><AjouterBeneficiaire /></PrivateRoute>} />
-      <Route path="/cartes"              element={<PrivateRoute><CartesPage /></PrivateRoute>} />
-      <Route path="/rib"                 element={<PrivateRoute><RIBPage /></PrivateRoute>} />
-      <Route path="/recu"                element={<PrivateRoute><RecuPageWrapper virementData={virementData} /></PrivateRoute>} />
-      <Route path="/chequier"            element={<PrivateRoute><Chequier /></PrivateRoute>} />
+      <Route path="/cartes"               element={<PrivateRoute><CartesPage /></PrivateRoute>} />
+      <Route path="/rib"                  element={<PrivateRoute><RIBPage /></PrivateRoute>} />
+      <Route path="/recu"                 element={<PrivateRoute><RecuPageWrapper virementData={virementData} /></PrivateRoute>} />
+      <Route path="/chequier"             element={<PrivateRoute><Chequier /></PrivateRoute>} />
+      <Route path="/conseiller"           element={<PrivateRoute><ConseillerPage /></PrivateRoute>} />
+      <Route path="/actus"                element={<PrivateRoute><ActusPage /></PrivateRoute>} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
