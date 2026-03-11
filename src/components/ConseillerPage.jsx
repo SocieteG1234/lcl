@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronLeft, Phone, Mail, MessageCircle, Calendar, Clock, X, Send, CheckCircle } from 'lucide-react';
+import { ChevronLeft, Phone, Mail, MessageCircle, Calendar, Clock, X, Send, CheckCircle, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import BottomNavigation from './Bottomnavigation';
@@ -8,7 +8,6 @@ const LCL_BLUE   = '#1a237e';
 const LCL_YELLOW = '#f5c518';
 
 const AUTO_REPLIES = [
-  "Bonjour ! Je suis Marie Dubois, votre conseillère. Comment puis-je vous aider ?",
   "Bien sûr, je comprends votre demande. Pouvez-vous me donner plus de détails ?",
   "Je vais vérifier cela pour vous immédiatement.",
   "Votre demande a bien été prise en compte. Je vous recontacte sous 24h.",
@@ -64,19 +63,15 @@ const RDVModal = ({ onClose }) => {
           <h2 className="text-lg font-bold" style={{ color: LCL_BLUE }}>Prendre rendez-vous</h2>
           <button onClick={onClose}><X className="w-5 h-5 text-gray-400" /></button>
         </div>
-
         <div className="space-y-4">
           {error && <p className="text-xs text-red-500 bg-red-50 rounded-xl p-3">{error}</p>}
-
           <div>
             <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase">Date</label>
             <input type="date" min={today} value={form.date}
               onChange={e => setForm({ ...form, date: e.target.value })}
               className="w-full border-2 rounded-xl px-4 py-3 text-sm focus:outline-none"
-              style={{ borderColor: form.date ? LCL_BLUE : '#E5E7EB' }}
-            />
+              style={{ borderColor: form.date ? LCL_BLUE : '#E5E7EB' }} />
           </div>
-
           <div>
             <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase">Heure</label>
             <div className="grid grid-cols-4 gap-2">
@@ -89,7 +84,6 @@ const RDVModal = ({ onClose }) => {
               ))}
             </div>
           </div>
-
           <div>
             <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase">Motif</label>
             <div className="space-y-2">
@@ -102,9 +96,8 @@ const RDVModal = ({ onClose }) => {
               ))}
             </div>
           </div>
-
           <button onClick={handleSubmit} disabled={loading}
-            className="w-full py-4 rounded-full font-bold text-white text-sm mt-2 disabled:opacity-60"
+            className="w-full py-4 rounded-full font-bold text-white text-sm disabled:opacity-60"
             style={{ backgroundColor: LCL_BLUE }}>
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -119,15 +112,17 @@ const RDVModal = ({ onClose }) => {
   );
 };
 
-// ── Modal Chat ────────────────────────────────────────────────────
-const ChatModal = ({ onClose, user }) => {
+// ── Page Chat (page entière, remplace ConseillerPage) ─────────────
+const ChatPage = ({ onClose }) => {
+  const { user } = useAuth();
   const [messages, setMessages] = useState([
     { id: 1, from: 'conseiller', text: "Bonjour ! Je suis Marie Dubois, votre conseillère LCL. Comment puis-je vous aider ?", time: new Date() }
   ]);
   const [input, setInput]   = useState('');
   const [typing, setTyping] = useState(false);
   const bottomRef           = useRef(null);
-  const replyIndex          = useRef(1);
+  const inputRef            = useRef(null);
+  const replyIndex          = useRef(0);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -149,33 +144,40 @@ const ChatModal = ({ onClose, user }) => {
   const fmt = (d) => d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-gray-50">
-      <div className="flex items-center gap-3 px-4 py-3 text-white shadow" style={{ backgroundColor: LCL_BLUE }}>
-        <button onClick={onClose}><ChevronLeft className="w-6 h-6" /></button>
-        <div className="w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0" style={{ backgroundColor: LCL_YELLOW, color: LCL_BLUE }}>M</div>
-        <div className="flex-1">
-          <p className="font-bold text-sm">Marie Dubois</p>
-          <p className="text-[11px] opacity-70">Conseillère personnelle • En ligne</p>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', backgroundColor: '#f3f4f6' }}>
+
+      {/* Header */}
+      <div style={{ backgroundColor: LCL_BLUE, padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+          <ChevronLeft style={{ color: 'white', width: 24, height: 24 }} />
+        </button>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', backgroundColor: LCL_YELLOW, color: LCL_BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 14, flexShrink: 0 }}>M</div>
+        <div style={{ flex: 1 }}>
+          <p style={{ color: 'white', fontWeight: 'bold', fontSize: 14, margin: 0 }}>Marie Dubois</p>
+          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, margin: 0 }}>Conseillère personnelle • En ligne</p>
         </div>
-        <div className="w-2 h-2 rounded-full bg-green-400" />
+        <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#4ade80' }} />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+      {/* Messages */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
         {messages.map(msg => (
-          <div key={msg.id} className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}>
+          <div key={msg.id} style={{ display: 'flex', justifyContent: msg.from === 'user' ? 'flex-end' : 'flex-start', alignItems: 'flex-end', gap: 8 }}>
             {msg.from === 'conseiller' && (
-              <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs mr-2 flex-shrink-0 self-end mb-1"
-                style={{ backgroundColor: LCL_YELLOW, color: LCL_BLUE }}>M</div>
+              <div style={{ width: 28, height: 28, borderRadius: '50%', backgroundColor: LCL_YELLOW, color: LCL_BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 11, flexShrink: 0 }}>M</div>
             )}
-            <div className="max-w-[75%]">
-              <div className="px-4 py-2.5 rounded-2xl text-sm"
-                style={msg.from === 'user'
+            <div style={{ maxWidth: '75%' }}>
+              <div style={{
+                padding: '10px 16px',
+                borderRadius: 18,
+                fontSize: 14,
+                ...(msg.from === 'user'
                   ? { backgroundColor: LCL_BLUE, color: 'white', borderBottomRightRadius: 4 }
-                  : { backgroundColor: 'white', color: '#1f2937', borderBottomLeftRadius: 4, boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }
-                }>
+                  : { backgroundColor: 'white', color: '#1f2937', borderBottomLeftRadius: 4, boxShadow: '0 1px 3px rgba(0,0,0,0.08)' })
+              }}>
                 {msg.text}
               </div>
-              <p className={`text-[10px] text-gray-400 mt-1 ${msg.from === 'user' ? 'text-right' : 'text-left'}`}>
+              <p style={{ fontSize: 10, color: '#9ca3af', margin: '4px 4px 0', textAlign: msg.from === 'user' ? 'right' : 'left' }}>
                 {fmt(msg.time)}
               </p>
             </div>
@@ -183,11 +185,11 @@ const ChatModal = ({ onClose, user }) => {
         ))}
 
         {typing && (
-          <div className="flex justify-start items-end gap-2">
-            <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0" style={{ backgroundColor: LCL_YELLOW, color: LCL_BLUE }}>M</div>
-            <div className="bg-white px-4 py-3 rounded-2xl shadow-sm flex gap-1 items-center" style={{ borderBottomLeftRadius: 4 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8 }}>
+            <div style={{ width: 28, height: 28, borderRadius: '50%', backgroundColor: LCL_YELLOW, color: LCL_BLUE, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 11, flexShrink: 0 }}>M</div>
+            <div style={{ backgroundColor: 'white', padding: '12px 16px', borderRadius: 18, borderBottomLeftRadius: 4, boxShadow: '0 1px 3px rgba(0,0,0,0.08)', display: 'flex', gap: 4 }}>
               {[0,1,2].map(i => (
-                <div key={i} className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
+                <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#9ca3af', animation: 'bounce 1s infinite', animationDelay: `${i * 0.15}s` }} />
               ))}
             </div>
           </div>
@@ -195,16 +197,48 @@ const ChatModal = ({ onClose, user }) => {
         <div ref={bottomRef} />
       </div>
 
-      <div className="bg-white border-t border-gray-100 px-4 py-3 flex items-center gap-3">
-        <input type="text" placeholder="Écrivez votre message..."
-          value={input} onChange={e => setInput(e.target.value)}
+      {/* Champ de saisie — FIXÉ en bas */}
+      <div style={{
+        backgroundColor: 'white',
+        borderTop: '1px solid #e5e7eb',
+        padding: '12px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        flexShrink: 0,
+      }}>
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Écrivez votre message..."
+          value={input}
+          onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage()}
-          className="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-sm focus:outline-none"
+          style={{
+            flex: 1,
+            backgroundColor: '#f3f4f6',
+            border: 'none',
+            borderRadius: 24,
+            padding: '10px 16px',
+            fontSize: 14,
+            outline: 'none',
+          }}
         />
-        <button onClick={sendMessage} disabled={!input.trim()}
-          className="w-10 h-10 rounded-full flex items-center justify-center disabled:opacity-40 transition"
-          style={{ backgroundColor: LCL_BLUE }}>
-          <Send className="w-4 h-4 text-white" />
+        <button
+          onClick={sendMessage}
+          disabled={!input.trim()}
+          style={{
+            width: 40, height: 40,
+            borderRadius: '50%',
+            backgroundColor: input.trim() ? LCL_BLUE : '#d1d5db',
+            border: 'none',
+            cursor: input.trim() ? 'pointer' : 'not-allowed',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+            transition: 'background-color 0.2s',
+          }}
+        >
+          <Send style={{ color: 'white', width: 16, height: 16 }} />
         </button>
       </div>
     </div>
@@ -213,8 +247,8 @@ const ChatModal = ({ onClose, user }) => {
 
 // ── Page principale ───────────────────────────────────────────────
 const ConseillerPage = () => {
-  const navigate             = useNavigate();
-  const { user }             = useAuth();
+  const navigate               = useNavigate();
+  const { user, logout }       = useAuth();
   const [showRDV, setShowRDV]   = useState(false);
   const [showChat, setShowChat] = useState(false);
 
@@ -228,21 +262,32 @@ const ConseillerPage = () => {
     nextRdv: 'Aucun rendez-vous prévu',
   };
 
+  const handleLogout = () => {
+    if (window.confirm('Voulez-vous vraiment vous déconnecter ?')) {
+      logout();
+      navigate('/');
+    }
+  };
+
+  // Si chat ouvert, affiche la page chat (sans BottomNavigation)
+  if (showChat) return <ChatPage onClose={() => setShowChat(false)} />;
+
   return (
     <div className="min-h-screen bg-gray-50 font-sans pb-24">
 
-      {showRDV  && <RDVModal  onClose={() => setShowRDV(false)} />}
-      {showChat && <ChatModal onClose={() => setShowChat(false)} user={user} />}
+      {showRDV && <RDVModal onClose={() => setShowRDV(false)} />}
 
+      {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 sticky top-0 z-40" style={{ backgroundColor: LCL_BLUE }}>
         <button onClick={() => navigate('/dashboard')}><ChevronLeft className="w-6 h-6 text-white" /></button>
         <h1 className="text-white font-bold text-base tracking-wide uppercase">Mon Conseiller</h1>
         <div className="w-6" />
       </div>
 
+      {/* Avatar */}
       <div className="mx-4 mt-6 rounded-2xl p-5 text-white shadow-lg" style={{ background: `linear-gradient(135deg, ${LCL_BLUE}, #283593)` }}>
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-black shadow-inner" style={{ backgroundColor: LCL_YELLOW, color: LCL_BLUE }}>
+          <div className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-black" style={{ backgroundColor: LCL_YELLOW, color: LCL_BLUE }}>
             {conseiller.name.charAt(0)}
           </div>
           <div>
@@ -257,6 +302,7 @@ const ConseillerPage = () => {
         </div>
       </div>
 
+      {/* Actions */}
       <div className="grid grid-cols-2 gap-3 px-4 mt-5">
         <a href={`tel:${conseiller.phone.replace(/\s/g, '')}`}
           className="flex flex-col items-center gap-2 bg-white rounded-2xl p-4 shadow-sm active:scale-95 transition-transform">
@@ -296,6 +342,7 @@ const ConseillerPage = () => {
         </button>
       </div>
 
+      {/* Horaires */}
       <div className="mx-4 mt-4 bg-white rounded-2xl p-4 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
           <Clock className="w-4 h-4" style={{ color: LCL_BLUE }} />
@@ -306,6 +353,15 @@ const ConseillerPage = () => {
           <p className="text-xs text-gray-400">Prochain rendez-vous</p>
           <p className="text-sm font-medium text-gray-700 mt-0.5">{conseiller.nextRdv}</p>
         </div>
+      </div>
+
+      {/* Déconnexion */}
+      <div className="mx-4 mt-4 mb-2">
+        <button onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-semibold text-sm text-red-600 bg-red-50 active:scale-95 transition-transform">
+          <LogOut className="w-4 h-4" />
+          Se déconnecter
+        </button>
       </div>
 
       <BottomNavigation />
