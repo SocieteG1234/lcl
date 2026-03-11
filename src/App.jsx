@@ -6,7 +6,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Header             from './components/Header';
 import HeroSection        from './components/HeroSection';
 import NewsSection        from './components/NewsSection';
-import { AppSection, Footer } from './components/AppSectionAndFooter';
+import { AppSection, Footer } from './components/AppSection';
 
 // ── Pages auth ────────────────────────────────────────────────────
 import LoginPage       from './components/LoginPage';
