@@ -5,7 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 // ── Pages publiques ───────────────────────────────────────────────
 import Header             from './components/Header';
 import HeroSection        from './components/HeroSection';
-import NewsAndLifeSection from './components/NewsAndLifeSection';
+import NewsSection        from './components/NewsSection';
 import { AppSection, Footer } from './components/AppSectionAndFooter';
 
 // ── Pages auth ────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ function HomePage() {
         onNavigateToLogin={() => navigate('/login')}
         onNavigateToInscription={() => navigate('/inscription')}
       />
-      <NewsAndLifeSection
+      <NewsSection
         onNavigateToLogin={() => navigate('/login')}
         onNavigateToInscription={() => navigate('/inscription')}
       />
