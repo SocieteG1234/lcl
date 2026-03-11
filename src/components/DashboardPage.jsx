@@ -3,7 +3,7 @@ import { Bell, X, User, CreditCard, FileText, HelpCircle, LogOut, Download, Shie
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import BottomNavigation from './Bottomnavigation';
-import BlockedAccountModal from './BlockedAccountModal';
+import BlockedAccountModal from './Blockedaccountmodal';
 
 const LCL_BLUE   = '#1a237e';
 const LCL_YELLOW = '#f5c518';
