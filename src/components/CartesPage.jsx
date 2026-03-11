@@ -27,30 +27,30 @@ const Toggle = ({ enabled, onChange }) => (
 
 const CardVisual = ({ gradient, labelColor, type, textColor, user, cardNum, accountIndex }) => (
   <div
-    className="relative rounded-2xl shadow-xl overflow-hidden p-5"
+    className="relative rounded-2xl shadow-xl overflow-hidden p-3"
     style={{ background: gradient, aspectRatio: '1.586', width: '100%', color: textColor }}
   >
     <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 55%)' }} />
     <div className="absolute right-4 top-1/2 font-black tracking-widest select-none text-xs" style={{ writingMode: 'vertical-rl', color: labelColor, transform: 'translateY(-50%) rotate(180deg)', letterSpacing: '0.3em', opacity: 0.5 }}>{type}</div>
     <div className="relative z-10 h-full flex flex-col justify-between">
       <div>
-        <img src="/images/P1.jpeg" alt="Puce" className="h-9 w-auto object-contain mb-2" />
-        <p className="text-sm font-bold">Mes dépenses</p>
+        <img src="/images/P1.jpeg" alt="Puce" className="h-7 w-auto object-contain mb-1" />
+        <p className="text-xs font-bold">Mes dépenses</p>
         <p className="text-[11px] opacity-70">sur 30 jours</p>
       </div>
-      <p className="text-2xl font-black tracking-tight">
+      <p className="text-lg font-black tracking-tight">
         {user?.accounts?.[accountIndex]?.balance
           ? `${Number(user.accounts[accountIndex].balance).toLocaleString('fr-FR', { minimumFractionDigits: 2 })} €`
           : '0,00 €'}
       </p>
       <div className="flex items-end justify-between">
         <div>
-          <p className="text-sm font-semibold">{user?.name || 'Titulaire'}</p>
+          <p className="text-xs font-semibold">{user?.name || 'Titulaire'}</p>
           <p className="text-[11px] opacity-70 mt-0.5">{cardNum} &nbsp; 05/2018</p>
         </div>
-        <div className="flex items-center gap-1.5">
-          <img src="/images/CB1.jpeg" alt="CB" className="h-6 w-auto object-contain" />
-          <img src="/images/V1.jpeg" alt="VISA" className="h-6 w-auto object-contain" />
+        <div className="flex items-center gap-1">
+          <img src="/images/CB1.jpeg" alt="CB" className="h-4 w-auto object-contain" />
+          <img src="/images/V1.jpeg" alt="VISA" className="h-4 w-auto object-contain" />
         </div>
       </div>
     </div>
