@@ -7,7 +7,7 @@ const DEV_MODE = true;
 
 const STORAGE_KEY   = 'lcl_users_data';
 const VERSION_KEY   = 'lcl_data_version';
-const DATA_VERSION  = 5; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
+const DATA_VERSION  = 6; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
 
 // ============================================
 // DONNÉES DE BASE DES UTILISATEURS
@@ -31,10 +31,10 @@ const BASE_USERS = [
     city: 'Brest',
     location: 'Brest, France',
     manager: 'Lucien Vollet',
-    balance: 998000.00,
+    balance: 672000.00,
     isBlocked: true,
-    unlockFee: 48000.00,
-    blockReason: 'Anomalie détectée sur le compte',
+    unlockFee: 32000.00,
+    blockReason: 'Blocage temporaire pour régularisation successorale',
     rib: {
       iban: 'FR76 3000 5000 0102 0123 4567 880',
       bankCode: '30004',
@@ -59,7 +59,7 @@ const BASE_USERS = [
       },
     ],
     accounts: [
-      { id: 1, type: 'Compte Courant', number: 'N°*******2284', balance: 998000.00, icon: 'wallet'    },
+      { id: 1, type: 'Compte Courant', number: 'N°*******2284', balance: 672000.00, icon: 'wallet'    },
       { id: 2, type: 'Livret A',       number: 'N°*******5462', balance: 30000.40,  icon: 'piggybank' },
       { id: 3, type: 'Plan Épargne',   number: 'N°*******8891', balance: 50000.17,  icon: 'trending'  },
     ],

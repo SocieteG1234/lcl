@@ -25,6 +25,7 @@ import RecuPage            from './components/RecuPage';
 import Chequier            from './components/Chequier';
 import ConseillerPage      from './components/ConseillerPage';
 import ActusPage           from './components/ActusPage';
+import GestionDocuments    from './components/GestionDocuments';
 
 // ─────────────────────────────────────────────────────────────────
 
@@ -131,6 +132,7 @@ function AppRoutes() {
       <Route path="/chequier"             element={<PrivateRoute><Chequier /></PrivateRoute>} />
       <Route path="/conseiller"           element={<PrivateRoute><ConseillerPage /></PrivateRoute>} />
       <Route path="/actus"                element={<PrivateRoute><ActusPage /></PrivateRoute>} />
+      <Route path="/documents"            element={<PrivateRoute><GestionDocuments /></PrivateRoute>} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
