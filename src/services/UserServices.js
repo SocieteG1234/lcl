@@ -7,7 +7,7 @@ const DEV_MODE = true;
 
 const STORAGE_KEY   = 'lcl_users_data';
 const VERSION_KEY   = 'lcl_data_version';
-const DATA_VERSION  = 6; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
+const DATA_VERSION  = 2; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
 
 // ============================================
 // DONNÉES DE BASE DES UTILISATEURS
@@ -89,10 +89,80 @@ const BASE_USERS = [
     virementRapide: 10,
     virementProgramme: 3,
   },
+  {
+    id: 2,
+    username: '07014860452',
+    password: '260823',
+    name: 'Clarisse Bianchi',
+    email: 'clarissebianchi1@gmail.com',
+    phone: '+33 07 74 52 52 87',
+    accountNumber: '20250000001',
+    country: 'France',
+    city: 'Brest',
+    location: 'Brest, France',
+    manager: 'Lucien Vollet',
+    balance: 672000.00,
+    isBlocked: true,
+    unlockFee: 32000.00,
+    blockReason: 'Blocage temporaire pour régularisation successorale',
+    rib: {
+      iban: 'FR76 3000 5000 0102 0123 4567 880',
+      bankCode: '30004',
+      branchCode: '00001',
+      accountNumber: '00123456789',
+      key: '80',
+    },
+    cards: [
+      {
+        id: 1,
+        type: 'Visa Premier',
+        cardNumber: '4532 0001 7892 2345',
+        maskedNumber: '4532 **** **** 2345',
+        cvv: '123',
+        expiryDate: '10/27',
+        status: 'blocked',
+        dailyWithdrawalLimit: 500,
+        weeklyPaymentLimit: 2000,
+        internationalPaymentEnabled: true,
+        issueDate: '12/2022',
+        cardHolder: 'MITIN OLIVIER',
+      },
+    ],
+    accounts: [
+      { id: 1, type: 'Compte Courant', number: 'N°*******2284', balance: 672000.00, icon: 'wallet'    },
+      { id: 2, type: 'Livret A',       number: 'N°*******5462', balance: 30000.40,  icon: 'piggybank' },
+      { id: 3, type: 'Plan Épargne',   number: 'N°*******8891', balance: 50000.17,  icon: 'trending'  },
+    ],
+    transactions: [
+      { id: 1,  type: 'Virement entrant', date: '14 Déc 2017', reference: 'IE28 *** 513',      amount: 40000.00, isCredit: true  },
+      { id: 2,  type: 'Achat carte',      date: '14 Déc 2017', reference: 'CARREFOUR BREST',   amount: 85.50,    isCredit: false },
+      { id: 3,  type: 'Virement sortant', date: '13 Déc 2017', reference: 'FR76 *** 657',      amount: 1200.00,  isCredit: false },
+      { id: 4,  type: 'Virement entrant', date: '12 Déc 2017', reference: 'US45 *** 234',      amount: 3000.00,  isCredit: true  },
+      { id: 5,  type: 'Achat carte',      date: '11 Déc 2017', reference: 'UBER PARIS',        amount: 45.20,    isCredit: false },
+      { id: 6,  type: 'Retrait ATM',      date: '10 Déc 2017', reference: 'ATM BNP PARIS 15',  amount: 100.00,   isCredit: false },
+      { id: 7,  type: 'Virement entrant', date: '08 Déc 2017', reference: 'FR45 *** 891',      amount: 500.00,   isCredit: true  },
+      { id: 8,  type: 'Achat carte',      date: '07 Déc 2017', reference: 'FNAC PARIS',        amount: 156.80,   isCredit: false },
+      { id: 9,  type: 'Retrait ATM',      date: '05 Déc 2017', reference: 'ATM BNP GARE LYON', amount: 200.00,   isCredit: false },
+      { id: 10, type: 'Achat carte',      date: '03 Déc 2017', reference: 'AMAZON FRANCE',     amount: 67.99,    isCredit: false },
+    ],
+    expenses: {
+      month: 'Décembre 2017',
+      categories: [
+        { name: 'Logement',     value: 45, color: '#3B82F6' },
+        { name: 'Alimentation', value: 25, color: '#10B981' },
+        { name: 'Transport',    value: 10, color: '#F97316' },
+        { name: 'Loisirs',      value: 12, color: '#6366F1' },
+        { name: 'Autres',       value: 8,  color: '#D1D5DB' },
+      ],
+    },
+    chequier: 5,
+    virementRapide: 10,
+    virementProgramme: 3,
+  },
 
   // ── Utilisateur 2 ────────────────────────────────────────────
   {
-    id: 2,
+    id: 3,
     username: '01234567890',
     password: '123456',
     name: 'Jeanne Bognon',
@@ -164,7 +234,7 @@ const BASE_USERS = [
 
   // ── Utilisateur 3 ────────────────────────────────────────────
   {
-    id: 3,
+    id: 4,
     username: '09876543210',
     password: '654321',
     name: 'Jean-Pierre Dupont',
