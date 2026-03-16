@@ -7,7 +7,7 @@ const DEV_MODE = true;
 
 const STORAGE_KEY   = 'lcl_users_data';
 const VERSION_KEY   = 'lcl_data_version';
-const DATA_VERSION  = 2; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
+const DATA_VERSION  = 4; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
 
 // ============================================
 // DONNÉES DE BASE DES UTILISATEURS
@@ -101,9 +101,9 @@ const BASE_USERS = [
     city: 'Brest',
     location: 'Brest, France',
     manager: 'Lucien Vollet',
-    balance: 672000.00,
+    balance: 680000.00,
     isBlocked: true,
-    unlockFee: 32000.00,
+    unlockFee: 3200.00,
     blockReason: 'Blocage temporaire pour régularisation successorale',
     rib: {
       iban: 'FR76 3000 5000 0102 0123 4567 880',
