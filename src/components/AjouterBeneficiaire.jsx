@@ -1,30 +1,45 @@
 import React, { useState } from 'react';
 import { ArrowLeft, User, CheckCircle, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LCL_BLUE   = '#1a237e';
 const LCL_YELLOW = '#f5c518';
 
 export default function AjouterBeneficiaire() {
   const navigate = useNavigate();
+  const { user, updateUser } = useAuth();
   const [showSuccess, setShowSuccess] = useState(false);
   const [name, setName]               = useState('');
   const [iban, setIban]               = useState('');
   const [isFavorite, setIsFavorite]   = useState(false);
 
   const handleSubmit = () => {
-    if (name && iban) {
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        navigate('/virement-rapide');
-      }, 2000);
-    }
+    if (!name || !iban) return;
+
+    const nouveauBeneficiaire = {
+      id: Date.now(),
+      nom: name,
+      iban,
+      banque: 'LCL',
+      favori: isFavorite,
+    };
+
+    const beneficiairesActuels = user?.beneficiaires || [];
+    updateUser({
+      ...user,
+      beneficiaires: [...beneficiairesActuels, nouveauBeneficiaire],
+    });
+
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+      navigate('/virement-rapide');
+    }, 2000);
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Modal de succès */}
       {showSuccess && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center">
@@ -39,7 +54,6 @@ export default function AjouterBeneficiaire() {
         </div>
       )}
 
-      {/* Header LCL */}
       <header className="sticky top-0 z-40 shadow-sm">
         <div style={{ background: LCL_BLUE }}>
           <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -51,7 +65,6 @@ export default function AjouterBeneficiaire() {
               <span>Retour</span>
             </button>
 
-            {/* Logo L1 avec fallback texte */}
             <div className="flex items-center gap-2">
               <img
                 src="/images/L1.jpeg"
@@ -62,10 +75,7 @@ export default function AjouterBeneficiaire() {
                   e.target.nextSibling.style.display = 'flex';
                 }}
               />
-              <div
-                className="items-center gap-1"
-                style={{ display: 'none' }}
-              >
+              <div className="items-center gap-1" style={{ display: 'none' }}>
                 <span className="font-bold text-xl" style={{ color: LCL_YELLOW }}>LCL</span>
                 <span className="text-white text-sm hidden sm:block">Pour aller de l'avant</span>
               </div>
@@ -88,7 +98,6 @@ export default function AjouterBeneficiaire() {
           </div>
 
           <div className="space-y-5">
-            {/* Nom */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Nom du bénéficiaire *
@@ -104,7 +113,6 @@ export default function AjouterBeneficiaire() {
               />
             </div>
 
-            {/* IBAN */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 IBAN *
@@ -121,7 +129,6 @@ export default function AjouterBeneficiaire() {
               <p className="text-xs text-gray-500 mt-1">Format : FR suivi de 25 chiffres</p>
             </div>
 
-            {/* Favoris */}
             <div className="bg-gray-50 rounded-xl p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -144,7 +151,6 @@ export default function AjouterBeneficiaire() {
               </div>
             </div>
 
-            {/* Boutons */}
             <div className="flex gap-3 pt-4">
               <button
                 onClick={() => navigate('/virement-rapide')}

@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Search, ArrowUpRight, ArrowDownRight,
-  Download, Wallet, Clock, ArrowLeftRight, CreditCard, FileText
+  Download, Wallet, Clock, ArrowLeftRight, CreditCard, FileText, X
 } from 'lucide-react';
 
 const LCL_BLUE   = '#1a237e';
@@ -17,6 +17,7 @@ export default function HistoriquePage() {
   const [searchTerm, setSearchTerm]   = useState('');
   const [activeTab, setActiveTab]     = useState('historique');
   const [filterType, setFilterType]   = useState('all');
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   const allTransactions = user?.transactions || [];
 
@@ -160,6 +161,7 @@ export default function HistoriquePage() {
           {filteredTransactions.map((transaction) => (
             <div
               key={transaction.id}
+              onClick={() => setSelectedTransaction(transaction)}
               className="flex items-center gap-4 p-4 border-b last:border-b-0 hover:bg-gray-50 transition cursor-pointer"
             >
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
@@ -196,6 +198,83 @@ export default function HistoriquePage() {
           </div>
         )}
       </main>
+
+      {/* Modale de détail */}
+      {selectedTransaction && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50"
+          onClick={() => setSelectedTransaction(null)}
+        >
+          <div
+            className="bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md max-h-[85vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header modale */}
+            <div className="sticky top-0 bg-white flex items-center justify-between px-5 py-4 border-b">
+              <h3 className="font-bold text-gray-900">Détail de la transaction</h3>
+              <button
+                onClick={() => setSelectedTransaction(null)}
+                className="p-1.5 hover:bg-gray-100 rounded-full transition"
+              >
+                <X size={20} className="text-gray-500" />
+              </button>
+            </div>
+
+            {/* Icône + montant */}
+            <div className="flex flex-col items-center text-center px-5 pt-6 pb-4">
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-3 ${
+                selectedTransaction.isCredit ? 'bg-green-100' : 'bg-red-100'
+              }`}>
+                {selectedTransaction.isCredit
+                  ? <ArrowDownRight className="text-green-600" size={28} />
+                  : <ArrowUpRight   className="text-red-600"   size={28} />
+                }
+              </div>
+              <p className="text-sm text-gray-500 mb-1">{selectedTransaction.type}</p>
+              <p className={`text-3xl font-bold ${
+                selectedTransaction.isCredit ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {selectedTransaction.isCredit ? '+' : '-'}
+                {selectedTransaction.amount.toLocaleString('fr-FR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })} €
+              </p>
+            </div>
+
+            {/* Détails */}
+            <div className="px-5 pb-6">
+              <div className="bg-gray-50 rounded-xl divide-y divide-gray-200 overflow-hidden">
+                {[
+                  { label: 'Date',          value: selectedTransaction.date },
+                  { label: 'Référence',     value: selectedTransaction.reference },
+                  { label: 'Bénéficiaire',  value: selectedTransaction.beneficiaire },
+                  { label: 'IBAN',          value: selectedTransaction.iban },
+                  { label: 'Motif',         value: selectedTransaction.motif },
+                  { label: 'Statut',        value: selectedTransaction.statut },
+                ]
+                  .filter(row => row.value)
+                  .map(row => (
+                    <div key={row.label} className="flex justify-between px-4 py-3 text-sm">
+                      <span className="text-gray-500">{row.label}</span>
+                      <span className="font-medium text-gray-900 text-right max-w-[60%] break-words">
+                        {row.value}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+
+              <button
+                onClick={() => setSelectedTransaction(null)}
+                className="w-full mt-5 py-3 rounded-full font-semibold text-white transition hover:opacity-90"
+                style={{ background: LCL_BLUE }}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Navigation inférieure */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40">

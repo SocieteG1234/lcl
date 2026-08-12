@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, AlertCircle, ChevronDown, Calendar } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import UserServices from '../services/UserServices';
 
 const LCL_BLUE = '#1a237e';
 
@@ -12,7 +13,7 @@ const FREQUENCES = [
 ];
 
 export default function VirementProgramme({ navigate }) {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
 
   const beneficiaires = user?.beneficiaires || [
     { id: 1, nom: 'Jean Dupont',    iban: 'FR76 3000 6000 0112 3456 7890 189', banque: 'BNP Paribas' },
@@ -29,8 +30,8 @@ export default function VirementProgramme({ navigate }) {
     dateDebut: today,
     frequence: 'unique',
   });
-  const [step, setStep] = useState('form');
-  const [loading, setLoading] = useState(false);
+  const [step, setStep]         = useState('form');
+  const [loading, setLoading]   = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   const mainAccount = user?.accounts?.find(a => a.type === 'LIQUIDITE') || user?.accounts?.[0];
@@ -49,9 +50,33 @@ export default function VirementProgramme({ navigate }) {
 
   const handleConfirm = async () => {
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1500));
-    setLoading(false);
-    setStep('success');
+
+    const montant = parseFloat(form.montant.replace(',', '.'));
+    const virementProgramme = {
+      id: Date.now(),
+      beneficiaire: selectedBenef.nom,
+      iban: selectedBenef.iban,
+      montant,
+      motif: form.motif || null,
+      dateDebut: form.dateDebut,
+      frequence: form.frequence,
+      statut: 'Actif',
+    };
+
+    const updates = {
+      virementsProgrammes: [virementProgramme, ...(user.virementsProgrammes || [])],
+    };
+
+    try {
+      await UserServices.updateUser(user.id, updates);
+      updateUser({ ...user, ...updates });
+      setStep('success');
+    } catch (err) {
+      setErrorMsg("Le virement programmé n'a pas pu être enregistré. Veuillez réessayer.");
+      setStep('form');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (step === 'success') {
@@ -103,6 +128,14 @@ export default function VirementProgramme({ navigate }) {
             </div>
           ))}
         </div>
+
+        {errorMsg && (
+          <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-3 text-sm text-red-700">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            {errorMsg}
+          </div>
+        )}
+
         <div className="flex gap-3 pt-2">
           <button
             onClick={() => setStep('form')}
@@ -138,7 +171,6 @@ export default function VirementProgramme({ navigate }) {
         </div>
       )}
 
-      {/* Bénéficiaire */}
       <div>
         <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Bénéficiaire</label>
         <div className="relative">
@@ -157,7 +189,6 @@ export default function VirementProgramme({ navigate }) {
         </div>
       </div>
 
-      {/* Montant */}
       <div>
         <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Montant</label>
         <div className="relative">
@@ -175,7 +206,6 @@ export default function VirementProgramme({ navigate }) {
         </div>
       </div>
 
-      {/* Date */}
       <div>
         <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Date de début</label>
         <div className="relative">
@@ -191,7 +221,6 @@ export default function VirementProgramme({ navigate }) {
         </div>
       </div>
 
-      {/* Fréquence */}
       <div>
         <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Fréquence</label>
         <div className="grid grid-cols-2 gap-2">
@@ -212,7 +241,6 @@ export default function VirementProgramme({ navigate }) {
         </div>
       </div>
 
-      {/* Motif */}
       <div>
         <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">Motif (optionnel)</label>
         <input
