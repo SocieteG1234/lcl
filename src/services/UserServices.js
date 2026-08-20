@@ -7,7 +7,7 @@ const DEV_MODE = true;
 
 const STORAGE_KEY   = 'lcl_users_data';
 const VERSION_KEY   = 'lcl_data_version';
-const DATA_VERSION  = 6; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
+const DATA_VERSION  = 67; // ⚡ INCRÉMENTER CE NUMÉRO À CHAQUE MODIFICATION DES UTILISATEURS
 
 // ============================================
 // DONNÉES DE BASE DES UTILISATEURS
@@ -216,8 +216,8 @@ const BASE_USERS = [
   {
     id: 2,
 
-    username: '07014860452',
-    password: '260824',
+    username: '07014860453',
+    password: '260827',
 
     name: 'André Durant',
 
