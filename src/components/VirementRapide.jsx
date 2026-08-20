@@ -10,7 +10,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import UserServices from '../services/UserServices';
-import BlockedAccountModal from './BlockedAccountModal';
+import BlockedAccountModal from './Blockedaccountmodal';
 
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
